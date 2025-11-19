@@ -1,15 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import HanziWriter from 'hanzi-writer';
 import { X, Play, PenTool, Eye, EyeOff } from 'lucide-react';
+import { useProgress } from '../context/ProgressContext';
 
 interface WritingPracticeProps {
+  id: string | number;
   character: string;
   pinyin: string;
   meaning: string;
   onClose: () => void;
 }
 
-const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, meaning, onClose }) => {
+const WritingPractice: React.FC<WritingPracticeProps> = ({ id, character, pinyin, meaning, onClose }) => {
+  const { updateProgress } = useProgress();
   const containerRef = useRef<HTMLDivElement>(null);
   const writersRef = useRef<HanziWriter[]>([]);
   const [showOutline, setShowOutline] = useState(true);
@@ -21,12 +25,12 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Clear previous writers
+    // Clear previous writers to prevent duplication (React StrictMode)
     containerRef.current.innerHTML = '';
     writersRef.current = [];
 
     const size = Math.min(window.innerWidth / characters.length - 20, 300); // Responsive size
-    const clampedSize = Math.max(Math.min(size, 200), 100); // Clamp between 100 and 200
+    const clampedSize = Math.max(Math.min(size, 150), 80); // Clamp between 80 and 150
 
     characters.forEach((char) => {
       const charDiv = document.createElement('div');
@@ -34,7 +38,6 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
       charDiv.style.margin = '5px';
       charDiv.style.backgroundColor = 'white';
       charDiv.style.borderRadius = '8px';
-      // charDiv.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
       containerRef.current?.appendChild(charDiv);
 
       const writer = HanziWriter.create(charDiv, char, {
@@ -51,7 +54,7 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
     });
 
     return () => {
-      // Cleanup if necessary, though HanziWriter doesn't have a strict destroy method that removes DOM
+      // Cleanup logic if needed
     };
   }, [character]);
 
@@ -65,7 +68,11 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
   const startQuiz = () => {
     setIsQuizMode(true);
     writersRef.current.forEach(writer => {
-      writer.quiz();
+      writer.quiz({
+        onComplete: (summary) => {
+          updateProgress(id, true);
+        }
+      });
     });
   };
 
@@ -81,7 +88,7 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
     });
   };
 
-  return (
+  return createPortal(
     <div style={{
       position: 'fixed',
       top: 0,
@@ -93,21 +100,22 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 100,
+      zIndex: 9999,
       padding: '1rem'
     }}>
       <div className="glass-panel" style={{ 
         width: '100%', 
-        maxWidth: '800px', 
+        maxWidth: '600px',
         background: 'var(--color-bg-secondary)',
         border: '1px solid var(--color-glass-border)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '2rem',
+        padding: '1.5rem',
         position: 'relative',
         maxHeight: '90vh',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        borderRadius: '12px'
       }}>
         <button 
           onClick={onClose}
@@ -118,26 +126,26 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
             background: 'transparent',
             border: 'none',
             color: 'var(--color-text-secondary)',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            zIndex: 10
           }}
         >
           <X size={24} />
         </button>
 
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
           <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-accent-primary)', marginBottom: '0.5rem' }}>{character}</div>
           <div style={{ fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>{pinyin}</div>
           <div style={{ color: 'var(--color-text-secondary)' }}>{meaning}</div>
         </div>
 
-        {/* Container for Hanzi Writers */}
         <div 
           ref={containerRef} 
           style={{ 
             display: 'flex', 
             flexWrap: 'wrap', 
             justifyContent: 'center', 
-            marginBottom: '2rem',
+            marginBottom: '1rem',
             gap: '1rem'
           }} 
         />
@@ -176,7 +184,8 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ character, pinyin, me
           {isQuizMode ? 'Hãy viết theo thứ tự nét bút.' : 'Xem hướng dẫn viết.'}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

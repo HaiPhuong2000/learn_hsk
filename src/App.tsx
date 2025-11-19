@@ -5,20 +5,25 @@ import VocabularyList from './pages/VocabularyList';
 import Flashcards from './pages/Flashcards';
 import Grammar from './pages/Grammar';
 import Exercises from './pages/Exercises';
+import WelcomeModal from './components/WelcomeModal';
+import { ProgressProvider } from './context/ProgressContext';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="vocabulary" element={<VocabularyList />} />
-          <Route path="flashcards" element={<Flashcards />} />
-          <Route path="grammar" element={<Grammar />} />
-          <Route path="exercises" element={<Exercises />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ProgressProvider>
+      <WelcomeModal />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="vocabulary" element={<VocabularyList />} />
+            <Route path="flashcards" element={<Flashcards />} />
+            <Route path="grammar" element={<Grammar />} />
+            <Route path="exercises" element={<Exercises />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ProgressProvider>
   );
 }
 

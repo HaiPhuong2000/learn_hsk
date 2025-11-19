@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import MatchingGame from '../components/MatchingGame';
 import Quiz from '../components/Quiz';
-import { HelpCircle } from 'lucide-react';
+import InputPractice from '../components/InputPractice';
+import { HelpCircle, Keyboard } from 'lucide-react';
 import { getVocabulary } from '../data/vocabulary';
 import { getStoredLevel, LEVEL_CHANGE_EVENT } from '../components/Layout';
 
 const Exercises: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'matching' | 'quiz'>('matching');
+  const [activeTab, setActiveTab] = useState<'matching' | 'quiz' | 'input'>('matching');
   const [currentLevel, setCurrentLevel] = useState(getStoredLevel());
   const [levelData, setLevelData] = useState(() => getVocabulary(currentLevel));
 
@@ -49,14 +50,26 @@ const Exercises: React.FC = () => {
         >
           <HelpCircle size={20} /> Trắc nghiệm
         </button>
+        <button 
+          className={`glass-button ${activeTab === 'input' ? 'active' : ''}`}
+          style={{ 
+            flex: 1, 
+            background: activeTab === 'input' ? 'var(--color-accent-primary)' : 'transparent',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem'
+          }}
+          onClick={() => setActiveTab('input')}
+        >
+          <Keyboard size={20} /> Tự luận
+        </button>
       </div>
 
       <div className="glass-panel" style={{ padding: '2rem' }}>
-        {activeTab === 'matching' ? (
-          <MatchingGame data={levelData} />
-        ) : (
-          <Quiz data={levelData} />
-        )}
+        {activeTab === 'matching' && <MatchingGame data={levelData} />}
+        {activeTab === 'quiz' && <Quiz data={levelData} />}
+        {activeTab === 'input' && <InputPractice data={levelData} />}
       </div>
     </div>
   );

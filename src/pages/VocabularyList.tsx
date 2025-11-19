@@ -32,20 +32,20 @@ const VocabularyList: React.FC = () => {
 
   const filteredVocabulary = useMemo(() => {
     if (!searchTerm) return vocabulary;
-    
+
     const lowerSearch = searchTerm.toLowerCase();
     const normalizedSearch = normalizePinyin(searchTerm);
 
     return vocabulary.filter(item => {
       const matchesCharacter = item.character.includes(searchTerm);
       const matchesMeaning = item.meaning.toLowerCase().includes(lowerSearch);
-      
+
       // Pinyin matching:
       // 1. Exact match (with tones)
       // 2. Normalized match (without tones)
       const itemPinyin = item.pinyin.toLowerCase();
       const normalizedItemPinyin = normalizePinyin(item.pinyin);
-      
+
       const matchesPinyin = itemPinyin.includes(lowerSearch) || normalizedItemPinyin.includes(normalizedSearch);
 
       return matchesCharacter || matchesMeaning || matchesPinyin;
@@ -58,9 +58,9 @@ const VocabularyList: React.FC = () => {
         <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-teal-400 bg-clip-text text-transparent">
           Danh sách từ vựng HSK {currentLevel}
         </h1>
-        <input 
-          type="text" 
-          placeholder="Tìm kiếm (Pinyin, Hán tự, Nghĩa)..." 
+        <input
+          type="text"
+          placeholder="Tìm kiếm (Pinyin, Hán tự, Nghĩa)..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full md:w-80 px-6 py-3 rounded-full bg-slate-800/50 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
@@ -80,14 +80,13 @@ const VocabularyList: React.FC = () => {
       )}
 
       {practiceItem && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <WritingPractice 
-            character={practiceItem.character} 
-            pinyin={practiceItem.pinyin} 
-            meaning={practiceItem.meaning}
-            onClose={() => setPracticeItem(null)} 
-          />
-        </div>
+        <WritingPractice
+          id={practiceItem.id}
+          character={practiceItem.character}
+          pinyin={practiceItem.pinyin}
+          meaning={practiceItem.meaning}
+          onClose={() => setPracticeItem(null)}
+        />
       )}
     </div>
   );
@@ -105,26 +104,26 @@ const VocabularyCard: React.FC<{ item: VocabularyItem, onPractice: () => void }>
           <div className="text-3xl font-bold mb-1">{item.character}</div>
           <div className="text-indigo-400 font-medium">{item.pinyin}</div>
         </div>
-        <button 
-          onClick={playAudio} 
+        <button
+          onClick={playAudio}
           className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-indigo-400 transition-colors"
           title="Nghe phát âm"
         >
           <Volume2 size={20} />
         </button>
       </div>
-      
+
       <div className="text-slate-300 text-sm flex-grow">
         {item.meaning}
       </div>
-      
+
       {item.example && (
         <div className="text-xs text-slate-500 italic">
           {item.example}
         </div>
       )}
 
-      <button 
+      <button
         onClick={onPractice}
         className="w-full mt-2 py-2 px-4 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 text-sm font-medium flex items-center justify-center gap-2 transition-colors border border-indigo-500/20"
       >

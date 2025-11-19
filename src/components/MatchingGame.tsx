@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import type { VocabularyItem } from '../data/vocabulary';
 import { RefreshCw } from 'lucide-react';
+import { speak } from '../utils/audio';
+import { useProgress } from '../context/ProgressContext';
 
 interface MatchingGameProps {
   data: VocabularyItem[];
 }
 
 const MatchingGame: React.FC<MatchingGameProps> = ({ data }) => {
-  const [cards, setCards] = useState<{ id: string | number; text: string; type: 'char' | 'meaning'; matched: boolean }[]>([]);
+  const { updateProgress } = useProgress();
+  const [cards, setCards] = useState<{ id: string | number; text: string; type: 'char' | 'meaning'; matched: boolean; character?: string }[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
   const [gameWon, setGameWon] = useState(false);
 
@@ -20,8 +23,8 @@ const MatchingGame: React.FC<MatchingGameProps> = ({ data }) => {
     const items = [...data].sort(() => Math.random() - 0.5).slice(0, 6);
     
     const gameCards = items.flatMap(item => [
-      { id: item.id, text: item.character, type: 'char' as const, matched: false },
-      { id: item.id, text: item.meaning, type: 'meaning' as const, matched: false }
+      { id: item.id, text: item.character, type: 'char' as const, matched: false, character: item.character },
+      { id: item.id, text: item.meaning, type: 'meaning' as const, matched: false, character: item.character }
     ]);
 
     setCards(gameCards.sort(() => Math.random() - 0.5));
@@ -31,6 +34,11 @@ const MatchingGame: React.FC<MatchingGameProps> = ({ data }) => {
 
   const handleCardClick = (index: number) => {
     if (selected.length === 2 || cards[index].matched || selected.includes(index)) return;
+
+    // Play audio when clicking a card with character (only for character cards)
+    if (cards[index].type === 'char' && cards[index].character) {
+      speak(cards[index].character!);
+    }
 
     const newSelected = [...selected, index];
     setSelected(newSelected);
@@ -46,12 +54,18 @@ const MatchingGame: React.FC<MatchingGameProps> = ({ data }) => {
           setCards(newCards);
           setSelected([]);
           
+          // Update SRS progress (Correct)
+          updateProgress(cards[first].id, true);
+
           if (newCards.every(c => c.matched)) {
             setGameWon(true);
           }
         }, 500);
       } else {
         // No match
+        // Update SRS progress (Incorrect)
+        updateProgress(cards[first].id, false);
+        
         setTimeout(() => {
           setSelected([]);
         }, 1000);

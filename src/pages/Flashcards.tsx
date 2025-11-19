@@ -43,11 +43,12 @@ const Flashcards: React.FC = () => {
     <div className="fade-in" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
       <h1 className="gradient-text" style={{ marginBottom: '2rem' }}>Thẻ ghi nhớ</h1>
       
-      <div style={{ marginBottom: '2rem' }}>
+      <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
         <Flashcard item={currentCard} />
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', alignItems: 'center' }}>
         <button onClick={prevCard} className="glass-button" disabled={currentIndex === 0}>
           <ChevronLeft size={24} />
         </button>
@@ -64,9 +65,8 @@ const Flashcards: React.FC = () => {
       <button 
         onClick={shuffleDeck} 
         className="glass-button" 
-        style={{ marginTop: '2rem', gap: '0.5rem' }}
+        style={{ marginTop: '2rem', gap: '0.5rem'}}
       >
-        <Shuffle size={18} />
         Trộn thẻ
       </button>
       
@@ -78,6 +78,7 @@ const Flashcards: React.FC = () => {
           borderRadius: '2px',
           transition: 'width 0.3s ease'
         }} />
+      </div>
       </div>
     </div>
   );
