@@ -69,7 +69,7 @@ const WritingPractice: React.FC<WritingPracticeProps> = ({ id, character, pinyin
     setIsQuizMode(true);
     writersRef.current.forEach(writer => {
       writer.quiz({
-        onComplete: (summary) => {
+        onComplete: () => {
           updateProgress(id, true);
         }
       });

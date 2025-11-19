@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getVocabulary } from '../data/vocabulary';
 import Flashcard from '../components/Flashcard';
-import { ChevronLeft, ChevronRight, Shuffle } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getStoredLevel, LEVEL_CHANGE_EVENT } from '../components/Layout';
 
 const Flashcards: React.FC = () => {
