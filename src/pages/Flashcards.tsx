@@ -40,45 +40,43 @@ const Flashcards: React.FC = () => {
   };
 
   return (
-    <div className="fade-in" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-      <h1 className="gradient-text" style={{ marginBottom: '2rem' }}>Thẻ ghi nhớ</h1>
+    <div className="fade-in max-w-2xl mx-auto text-center">
+      <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-teal-400 bg-clip-text text-transparent mb-8">
+        Thẻ ghi nhớ
+      </h1>
       
-      <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
+      <div className="mb-8 flex justify-center">
         <Flashcard item={currentCard} />
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem', alignItems: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', alignItems: 'center' }}>
-        <button onClick={prevCard} className="glass-button" disabled={currentIndex === 0}>
-          <ChevronLeft size={24} />
-        </button>
-        
-        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', minWidth: '80px' }}>
-          {currentIndex + 1} / {deck.length}
-        </span>
-        
-        <button onClick={nextCard} className="glass-button" disabled={currentIndex === deck.length - 1}>
-          <ChevronRight size={24} />
-        </button>
-      </div>
+      <div className="flex flex-col justify-center gap-4 items-center">
+        <div className="flex justify-center gap-4 items-center">
+          <button onClick={prevCard} className="glass-button" disabled={currentIndex === 0}>
+            <ChevronLeft size={24} />
+          </button>
+          
+          <span className="text-xl font-bold min-w-[80px]">
+            {currentIndex + 1} / {deck.length}
+          </span>
+          
+          <button onClick={nextCard} className="glass-button" disabled={currentIndex === deck.length - 1}>
+            <ChevronRight size={24} />
+          </button>
+        </div>
 
-      <button 
-        onClick={shuffleDeck} 
-        className="glass-button" 
-        style={{ marginTop: '2rem', gap: '0.5rem'}}
-      >
-        Trộn thẻ
-      </button>
-      
-      <div style={{ marginTop: '2rem', width: '100%', maxWidth: '400px', height: '4px', background: 'var(--color-bg-secondary)', borderRadius: '2px' }}>
-        <div style={{ 
-          width: `${((currentIndex + 1) / deck.length) * 100}%`, 
-          height: '100%', 
-          background: 'var(--color-accent-secondary)', 
-          borderRadius: '2px',
-          transition: 'width 0.3s ease'
-        }} />
-      </div>
+        <button 
+          onClick={shuffleDeck} 
+          className="glass-button mt-8 gap-2"
+        >
+          Trộn thẻ
+        </button>
+        
+        <div className="mt-8 w-full max-w-sm h-1 bg-slate-800 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-teal-500 transition-all duration-300 ease-out"
+            style={{ width: `${((currentIndex + 1) / deck.length) * 100}%` }}
+          />
+        </div>
       </div>
     </div>
   );
