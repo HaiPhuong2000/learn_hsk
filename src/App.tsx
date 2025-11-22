@@ -5,13 +5,11 @@ import VocabularyList from './pages/VocabularyList';
 import Flashcards from './pages/Flashcards';
 import Grammar from './pages/Grammar';
 import Exercises from './pages/Exercises';
-import WelcomeModal from './components/WelcomeModal';
 import { ProgressProvider } from './context/ProgressContext';
 
 function App() {
   return (
     <ProgressProvider>
-      <WelcomeModal />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
