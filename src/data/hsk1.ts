@@ -1,3 +1,5 @@
+
+
 import type { VocabularyItem } from './vocabulary';
 
 export const hsk1Data: VocabularyItem[] = [

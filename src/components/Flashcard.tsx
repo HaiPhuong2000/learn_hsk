@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import type { VocabularyItem } from '../data/vocabulary';
 import { Volume2, RotateCw } from 'lucide-react';
-
 import { speak } from '../utils/audio';
+import { parseExample } from '../utils/formatExample';
 
 interface FlashcardProps {
   item: VocabularyItem;
@@ -104,18 +104,25 @@ const Flashcard: React.FC<FlashcardProps> = ({ item }) => {
             {item.meaning}
           </p>
 
-          {item.example && (
-            <div style={{ 
-              padding: '1rem', 
-              background: 'rgba(255,255,255,0.05)', 
-              borderRadius: 'var(--radius-md)',
-              fontSize: '1rem',
-              color: 'var(--color-text-secondary)',
-              fontStyle: 'italic'
-            }}>
-              "{item.example}"
-            </div>
-          )}
+          {item.example && (() => {
+            const parsed = parseExample(item.example);
+            if (!parsed) return null;
+            
+            return (
+              <div style={{ 
+                padding: '1rem', 
+                background: 'rgba(255,255,255,0.05)', 
+                borderRadius: 'var(--radius-md)',
+                fontSize: '0.95rem',
+                color: 'var(--color-text-secondary)',
+                lineHeight: '1.7'
+              }}>
+                <div>{parsed.chinese}</div>
+                <div style={{ fontStyle: 'italic' }}>{parsed.pinyin}</div>
+                <div>{parsed.vietnamese}</div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

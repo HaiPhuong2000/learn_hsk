@@ -116,3 +116,8 @@ h3 { font-size: 1.5rem; }
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--spacing-md);
 }
+
+/* Hide scrollbar for webkit browsers (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
