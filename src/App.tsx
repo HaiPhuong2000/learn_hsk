@@ -5,6 +5,7 @@ import VocabularyList from './pages/VocabularyList';
 import Flashcards from './pages/Flashcards';
 import Grammar from './pages/Grammar';
 import Exercises from './pages/Exercises';
+import Chat from './pages/Chat';
 import { ProgressProvider } from './context/ProgressContext';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="flashcards" element={<Flashcards />} />
             <Route path="grammar" element={<Grammar />} />
             <Route path="exercises" element={<Exercises />} />
+            <Route path="chat" element={<Chat />} />
           </Route>
         </Routes>
       </BrowserRouter>

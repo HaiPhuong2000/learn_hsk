@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
-import { Book, Layers, Gamepad2, Menu, X, ChevronDown } from 'lucide-react';
+import { Book, Layers, Gamepad2, Menu, X, ChevronDown, MessageCircle } from 'lucide-react';
 
 // Create a custom event for level changes
 export const LEVEL_CHANGE_EVENT = 'hsk-level-change';
@@ -44,6 +44,7 @@ const Layout: React.FC = () => {
     { path: '/flashcards', label: 'Thẻ ghi nhớ', icon: <Layers size={20} /> },
     { path: '/grammar', label: 'Ngữ pháp', icon: <Book size={20} /> },
     { path: '/exercises', label: 'Bài tập', icon: <Gamepad2 size={20} /> },
+    { path: '/chat', label: 'Chat AI', icon: <MessageCircle size={20} /> },
   ];
 
   return (
