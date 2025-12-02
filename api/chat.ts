@@ -21,9 +21,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Initialize Gemini AI
+    // Initialize Gemini AI with Gemini 2.5 Flash (current stable model)
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
     // Create chat with system context
     const chat = model.startChat({
