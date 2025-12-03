@@ -21,9 +21,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Initialize Gemini AI with Gemini 2.5 Flash (current stable model)
+    // Initialize Gemini AI with Gemini 1.5 Pro (current stable model)
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
     // Create chat with system context injected into history
     const chat = model.startChat({
@@ -105,7 +105,19 @@ Khi người dùng hỏi về một từ/cụm từ:
     // Send message and get response
     const result = await chat.sendMessage(message);
     const response = await result.response;
+    
+    // Check if we have a valid response
+    if (!response.candidates || response.candidates.length === 0) {
+      console.warn('No candidates returned from Gemini');
+      return res.status(200).json({ response: 'Xin lỗi, tôi không thể trả lời câu hỏi này. (No response candidates)' });
+    }
+
     const text = response.text();
+    
+    if (!text) {
+      console.warn('Empty text returned from Gemini. Finish reason:', response.candidates[0].finishReason);
+      return res.status(200).json({ response: 'Xin lỗi, câu trả lời bị trống. Có thể do bộ lọc an toàn.' });
+    }
 
     return res.status(200).json({ response: text });
   } catch (error: any) {
