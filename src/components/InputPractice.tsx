@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { VocabularyItem } from '../data/vocabulary';
-import { Check, RefreshCw } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 
 interface InputPracticeProps {

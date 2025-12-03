@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import type { VocabularyItem } from '../data/vocabulary';
 import { Volume2, RotateCw } from 'lucide-react';
 import { speak } from '../utils/audio';
@@ -17,7 +17,7 @@ export interface FlashcardRef {
   animateSwipe: (direction: 'left' | 'right') => void;
 }
 
-const Flashcard = forwardRef<FlashcardRef, FlashcardProps>(({ item, nextItem, currentLevel, nextLevelOnRight, onSwipeLeft, onSwipeRight }, ref) => {
+const Flashcard = forwardRef<FlashcardRef, FlashcardProps>(({ item, nextItem, nextLevelOnRight, onSwipeLeft, onSwipeRight }, ref) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
