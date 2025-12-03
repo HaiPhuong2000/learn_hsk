@@ -25,7 +25,7 @@ const Exercises: React.FC = () => {
   }, []);
 
   return (
-    <div className="fade-in" style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div className="fade-in py-4" style={{ maxWidth: '800px', margin: '0 auto' }}>
       <h1 className="gradient-text" style={{ textAlign: 'center', marginBottom: '2rem' }}>Bài tập</h1>
       
       <div className="glass-panel" style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>

@@ -20,7 +20,8 @@ const Quiz: React.FC<QuizProps> = ({ data }) => {
   }, [data]);
 
   const startNewQuiz = () => {
-    const items = [...data].sort(() => Math.random() - 0.5).slice(0, 5);
+    // Use all vocabulary, shuffled
+    const items = [...data].sort(() => Math.random() - 0.5);
     
     const newQuestions = items.map(item => {
       // Get 3 random wrong answers
@@ -88,9 +89,8 @@ const Quiz: React.FC<QuizProps> = ({ data }) => {
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-        <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Câu hỏi {currentQ + 1} / {questions.length}</span>
-        <span style={{ color: 'var(--color-accent-primary)' }}>Điểm: {score}</span>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '2rem' }}>
+        <span style={{ color: 'var(--color-accent-primary)', fontSize: '1.2rem', fontWeight: 'bold' }}>Điểm: {score}</span>
       </div>
 
       {/* Progress Stats */}

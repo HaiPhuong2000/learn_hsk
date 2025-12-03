@@ -115,7 +115,7 @@ const InputPractice: React.FC<InputPracticeProps> = ({ data }) => {
         onClick={nextQuestion} 
         className="glass-button inline-flex items-center gap-2 text-slate-300 hover:text-white bg-slate-800/50 hover:bg-slate-800"
       >
-        <RefreshCw size={16} /> Bỏ qua
+        Bỏ qua
       </button>
     </div>
   );

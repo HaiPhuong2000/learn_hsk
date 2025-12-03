@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { updateCardProgress, getCardProgress, getCardLevel, type MemoryLevel } from '../utils/cardProgress';
 
 interface ProgressContextType {
   progress: Record<string, number>;
@@ -9,7 +10,7 @@ interface ProgressContextType {
     known: number;
     mastered: number;
   };
-  getLevel: (id: string | number) => number;
+  getLevel: (id: string | number) => MemoryLevel;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -17,39 +18,33 @@ const ProgressContext = createContext<ProgressContextType | undefined>(undefined
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [progress, setProgress] = useState<Record<string, number>>({});
 
+  // Load progress from cardProgress
   useEffect(() => {
-    const stored = localStorage.getItem('hsk_progress');
-    if (stored) {
-      try {
-        setProgress(JSON.parse(stored));
-      } catch (e) {
-        console.error('Failed to parse progress', e);
-      }
-    }
+    const cardProg = getCardProgress();
+    const scores: Record<string, number> = {};
+    Object.keys(cardProg).forEach(key => {
+      scores[key] = cardProg[key].memoryScore;
+    });
+    setProgress(scores);
   }, []);
 
   const updateProgress = (id: string | number, isCorrect: boolean) => {
     const strId = String(id);
-    setProgress((prev) => {
-      const currentLevel = prev[strId] || 0;
-      let newLevel;
-
-      if (isCorrect) {
-        // Increment level, max 3
-        newLevel = Math.min(3, currentLevel + 1);
-      } else {
-        // Reset to 0 on ANY mistake
-        newLevel = 0;
-      }
-
-      const newProgress = { ...prev, [strId]: newLevel };
-      localStorage.setItem('hsk_progress', JSON.stringify(newProgress));
-      return newProgress;
+    
+    // Use cardProgress to update
+    updateCardProgress(strId, isCorrect);
+    
+    // Update local state
+    const cardProg = getCardProgress();
+    const scores: Record<string, number> = {};
+    Object.keys(cardProg).forEach(key => {
+      scores[key] = cardProg[key].memoryScore;
     });
+    setProgress(scores);
   };
 
-  const getLevel = (id: string | number) => {
-    return progress[String(id)] || 0;
+  const getLevel = (id: string | number): MemoryLevel => {
+    return getCardLevel(String(id));
   };
 
   const getStats = (ids: (string | number)[]) => {
@@ -62,10 +57,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     ids.forEach(id => {
       const level = getLevel(id);
-      if (level === 0) stats.new++;
-      else if (level === 1) stats.familiar++;
-      else if (level === 2) stats.known++;
-      else if (level === 3) stats.mastered++;
+      if (level === 'new') stats.new++;
+      else if (level === 'familiar') stats.familiar++;
+      else if (level === 'known') stats.known++;
+      else if (level === 'mastered') stats.mastered++;
     });
 
     return stats;
